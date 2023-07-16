@@ -49,32 +49,32 @@ def getResponse(utterance, args):
 
 def getResult(inputSTR, utterance, args, resultDICT):
     debugInfo(inputSTR, utterance)
-    if utterance == "[我]想拿[美金]來換成100元[台幣]":
+    if utterance == "[我]想拿[美金]來換成[100元][台幣]":
         if CHATBOT_MODE:
             resultDICT["response"] = getResponse(utterance, args)
         else:
-            # write your code here
+            resultDICT["response"] = "請問你是要用{}換{}{}嗎?".format(args[1], args[3], args[2])
             pass
 
     if utterance == "[我]有[100元][美金]要換成[台幣]":
         if CHATBOT_MODE:
             resultDICT["response"] = getResponse(utterance, args)
         else:
-            # write your code here
+            resultDICT["response"] = "請問你是要用{}{}換{}嗎?".format(args[2], args[1], args[3])
             pass
 
     if utterance == "[我]要用[100元][日幣]換[美金]":
         if CHATBOT_MODE:
             resultDICT["response"] = getResponse(utterance, args)
         else:
-            # write your code here
+            resultDICT["response"] = "請問你是要用{}{}換{}嗎?".format(args[2], args[1], args[3])
             pass
 
     if utterance == "[我]要用[台幣]換[100元][美金]":
         if CHATBOT_MODE:
             resultDICT["response"] = getResponse(utterance, args)
         else:
-            # write your code here
+            resultDICT["response"] = "請問你是要用{}換{}{}嗎?".format(args[2], args[1], args[3])
             pass
 
     return resultDICT
