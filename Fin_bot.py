@@ -42,6 +42,8 @@
         }
 """
 
+import requests
+
 from requests import post
 from requests import codes
 import json
@@ -262,15 +264,24 @@ def testIntent():
     inputLIST = ['我要用100元日幣換美金','我要用台幣換100元美金','我有100元美金要換成台幣','我想拿美金來換成100元台幣']
     testLoki(inputLIST, ['Exchange'])
     print("")
-
+    
+def getTodayExchangeRate(): # get ExchangeRate table
+    response = requests.get("https://tw.rter.info/capi.php")
+    rateDICT = response.json()
+    return rateDICT
 
 if __name__ == "__main__":
     # 測試所有意圖
     testIntent()
+    rate = getTodayExchangeRate()
+    inputLIST = [input()]
+    resultDICT = runLoki(inputLIST)
+    print(resultDICT["response"])
+    print(rate)
 
-    # 測試其它句子
-    filterLIST = []
-    splitLIST = ["！", "，", "。", "？", "!", ",", "\n", "；", "\u3000", ";"]
-    resultDICT = execLoki("今天天氣如何？後天氣象如何？", filterLIST)            # output => ["今天天氣"]
-    resultDICT = execLoki("今天天氣如何？後天氣象如何？", filterLIST, splitLIST) # output => ["今天天氣", "後天氣象"]
-    resultDICT = execLoki(["今天天氣如何？", "後天氣象如何？"], filterLIST)      # output => ["今天天氣", "後天氣象"]
+    ## 測試其它句子
+    #filterLIST = []
+    #splitLIST = ["！", "，", "。", "？", "!", ",", "\n", "；", "\u3000", ";"]
+    #resultDICT = execLoki("今天天氣如何？後天氣象如何？", filterLIST)            # output => ["今天天氣"]
+    #resultDICT = execLoki("今天天氣如何？後天氣象如何？", filterLIST, splitLIST) # output => ["今天天氣", "後天氣象"]
+    #resultDICT = execLoki(["今天天氣如何？", "後天氣象如何？"], filterLIST)      # output => ["今天天氣", "後天氣象"]
