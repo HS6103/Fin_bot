@@ -52,8 +52,10 @@ import os
 import re
 try:
     from intent import Loki_Exchange
+    from intent import Loki_insurance
 except:
     from .intent import Loki_Exchange
+    from .intent import Loki_insurance
 
 
 LOKI_URL = "https://api.droidtown.co/Loki/BulkAPI/"
@@ -188,6 +190,11 @@ def runLoki(inputLIST, filterLIST=[]):
                 # Exchange
                 if lokiRst.getIntent(index, resultIndex) == "Exchange":
                     resultDICT = Loki_Exchange.getResult(key, lokiRst.getUtterance(index, resultIndex), lokiRst.getArgs(index, resultIndex), resultDICT)
+                # insurance
+                if lokiRst.getIntent(index, resultIndex) == "insurance":
+                    resultDICT = Loki_insurance.getResult(key, lokiRst.getUtterance(index, resultIndex), lokiRst.getArgs(index, resultIndex), resultDICT)
+                    
+
 
     else:
         resultDICT = {"msg": lokiRst.getMessage()}
@@ -261,9 +268,15 @@ def testLoki(inputLIST, filterLIST):
 def testIntent():
     # Exchange
     print("[TEST] Exchange")
-    inputLIST = ['我要用100元日幣換美金','我要用台幣換100元美金','我有100元美金要換成台幣','我想拿美金來換成100元台幣']
+    inputLIST = ['我要用100元日幣換美金','我要用台幣換100元美金','我有100元美金要換成台幣','我想拿美金換成100元台幣']
     testLoki(inputLIST, ['Exchange'])
     print("")
+    
+    # insurance
+    print("[TEST] insurance")
+    inputLIST = ['保保險','買保險','保1000萬保險','保保險1000萬','買1000萬保險']
+    testLoki(inputLIST, ['insurance'])
+    print("") 
     
 def getTodayExchangeRate(): # get ExchangeRate table
     response = requests.get("https://tw.rter.info/capi.php")
@@ -273,11 +286,13 @@ def getTodayExchangeRate(): # get ExchangeRate table
 if __name__ == "__main__":
     # 測試所有意圖
     testIntent()
-    rate = getTodayExchangeRate()
+    
     inputLIST = [input()]
     resultDICT = runLoki(inputLIST)
     print(resultDICT["response"])
-    print(rate)
+    
+    #rate = getTodayExchangeRate()
+    #print(rate)
 
     ## 測試其它句子
     #filterLIST = []
