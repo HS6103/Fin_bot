@@ -43,7 +43,8 @@
 """
 
 import requests
-
+import ArticutAPI
+from ArticutAPI import Articut
 from requests import post
 from requests import codes
 import json
@@ -63,6 +64,13 @@ try:
     accountInfo = json.load(open(os.path.join(os.path.dirname(__file__), "account.info"), encoding="utf-8"))
     USERNAME = accountInfo["username"]
     LOKI_KEY = accountInfo["loki_key"]
+    API_KEY = accountInfo["api_key"]
+    
+    if API_KEY == "":
+        articut = ArticutAPI.Articut(username=USERNAME, apikey=API_KEY)
+    else:
+        articut = ArticutAPI.Articut(username=USERNAME, apikey=API_KEY)
+        
 except Exception as e:
     print("[ERROR] AccountInfo => {}".format(str(e)))
     USERNAME = ""
@@ -283,16 +291,56 @@ def getTodayExchangeRate(): # get ExchangeRate table
     rateDICT = response.json()
     return rateDICT
 
+def moneyName(inputSTR): # input src or tgt to get currency
+    moneyDICT = {"歐元": "EUR",
+                 "美金": "USD",
+                 "日圓": "JPY",
+                 "台幣": "TWD",
+                 "臺幣": "TWD",
+                 "英鎊": "GBP",
+                 "法郎": "CHF",
+                 "澳幣": "AUD",
+                 "港幣": "HKD",
+                 "泰銖": "THB"}
+    if (inputSTR == None): # init = TWD
+        moneyDICT[inputSTR] = "TWD"
+    return moneyDICT[inputSTR]
+
+def amountSTRconvert(inputSTR): # convert [X元] into [number X]
+    resultDICT = {}
+    if (inputSTR == None): # 沒說換匯金額多少就預設1
+        resultDICT["number"] = 1
+    else:
+        resultDICT = articut.parse(inputSTR, level="lv3") # 有換匯金額就轉成Number
+        #print(resultDICT)
+    return resultDICT["number"]
+
 if __name__ == "__main__":
     # 測試所有意圖
-    testIntent()
+    #testIntent()
     
-    inputLIST = [input()]
+    inputLIST = ['我要用臺幣1000萬換日圓']
     resultDICT = runLoki(inputLIST)
-    print(resultDICT["response"])
+    
+    src = moneyName(resultDICT["source"])
+    tgt = moneyName(resultDICT["target"])
+    amt = amountSTRconvert(resultDICT['amount'])[resultDICT['amount']]
+
+    rateDICT = getTodayExchangeRate() # get ExchangeRate table
+    # calculate ExchangeRate by [source -> USD -> target]
+    
+    print(rateDICT["USDTWD"])
+
+    exRate = round((1/rateDICT["USD{}".format(src)]["Exrate"]) * (rateDICT["USD{}".format(tgt)]["Exrate"])) #括號要放對不然round可能會把匯率變0
+    print(1/rateDICT["USD{}".format(src)]["Exrate"])
+    print(rateDICT["USD{}".format(tgt)]["Exrate"])
+
+    print("\nExchanging",amt, src, "to", tgt,"...")
+    print("You need", amt*exRate,tgt) # 金額*匯率
+
     
     #rate = getTodayExchangeRate()
-    #print(rate)
+    
 
     ## 測試其它句子
     #filterLIST = []
