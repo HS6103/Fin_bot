@@ -13,10 +13,11 @@
     Output:
         resultDICT    dict
 """
-
+from ArticutAPI import Articut
 from random import sample
 import json
 import os
+
 
 DEBUG_Exchange = True
 CHATBOT_MODE = False
@@ -53,42 +54,54 @@ def getResult(inputSTR, utterance, args, resultDICT):
         if CHATBOT_MODE:
             resultDICT["response"] = getResponse(utterance, args)
         else:
-            # write your code here
+            resultDICT["source"] = args[1]
+            resultDICT["target"] = args[2]
+            resultDICT["amount"] = args[0]
             pass
 
     if utterance == "[100台幣]換[日幣]":
         if CHATBOT_MODE:
             resultDICT["response"] = getResponse(utterance, args)
         else:
-            # write your code here
+            resultDICT['source'] = args[0]
+            resultDICT['target'] = args[1]
+            resultDICT['amount'] = None
             pass
 
     if utterance == "[台幣][100]換[美金]":
         if CHATBOT_MODE:
             resultDICT["response"] = getResponse(utterance, args)
         else:
-            # write your code here
+            resultDICT['source'] = args[0]
+            resultDICT['target'] = args[2]
+            resultDICT['amount'] = args[1]    
             pass
 
     if utterance == "[台幣]換[100元][美金]":
         if CHATBOT_MODE:
             resultDICT["response"] = getResponse(utterance, args)
         else:
-            # write your code here
+            resultDICT['source'] = args[0]
+            resultDICT['target'] = args[2]
+            resultDICT['amount'] = args[1]
             pass
 
     if utterance == "[台幣]換[100美金]":
         if CHATBOT_MODE:
             resultDICT["response"] = getResponse(utterance, args)
         else:
-            # write your code here
+            resultDICT["source"] = args[0]
+            resultDICT["target"] = None
+            resultDICT["amount"] = args[1]
             pass
 
     if utterance == "[台幣]換[美金][100]":
         if CHATBOT_MODE:
             resultDICT["response"] = getResponse(utterance, args)
         else:
-            # write your code here
+            resultDICT["source"] = args[0]
+            resultDICT["target"] = args[1]
+            resultDICT["amount"] = args[2]
             pass
 
     return resultDICT

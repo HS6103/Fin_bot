@@ -52,7 +52,7 @@ def getResult(inputSTR, utterance, args, resultDICT):
         if CHATBOT_MODE:
             resultDICT["response"] = getResponse(utterance, args)
         else:
-            # write your code here
+            resultDICT['response'] = '你要保{}{}'.format(args[0], args[1])
             pass
 
     if utterance == "保[1000萬元][保險]":
